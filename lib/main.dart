@@ -16,6 +16,11 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   var questionindex = 0;
+  void resetquiz() {
+    setState(() {
+      questionindex = 0;
+    });
+  }
 
   void answerquestion() {
     setState(() {
@@ -41,20 +46,32 @@ class MyAppState extends State<MyApp> {
     ];
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('QUIZ APP'),
-          titleTextStyle: const TextStyle(fontSize: 25),
-        ),
-        body: Column(children: [
-          Question(
-            questions[questionindex]['questiontext'] as String,
+          appBar: AppBar(
+            title: const Text('QUIZ APP'),
+            titleTextStyle: const TextStyle(fontSize: 25),
           ),
-          ...(questions[questionindex]['answers'] as List<String>)
-              .map((answer) {
-            return Answer(answerquestion, answer);
-          }).toList()
-        ]),
-      ),
+          body: questionindex < questions.length
+              ? Column(children: [
+                  Question(
+                    questions[questionindex]['questiontext'] as String,
+                  ),
+                  ...(questions[questionindex]['answers'] as List<String>)
+                      .map((answer) {
+                    return Answer(answerquestion, answer);
+                  }).toList()
+                ])
+              : Center(
+                  child: Column(children: <Widget>[
+                  const Text(
+                    'YOU DID IT!',
+                    style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  TextButton(
+                      onPressed: resetquiz,
+                      child: const Text('Reset Quiz',
+                          style: TextStyle(fontWeight: FontWeight.bold)))
+                ]))),
     );
   }
 }
